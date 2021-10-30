@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+</head>
+<body>
+<form>
+	<table>
+	  <tr>
+	    <th>Book Name</th>
+	    <th>Code</th>
+	    <th>Writer Name</th>
+	    <th>Other</th>
+	  </tr>
+	  <tr>
+	    <td><input type="text" name=""></td>
+	    <td><input type="text" name=""></td>
+	    <td><input type="text" name=""></td>
+	    <td><input type="text" name=""></td>
+	  </tr>
+	</table>
+	<button onclick="addNewRaw()">Add New</button>
+</form>
+
+<script type="text/javascript">
+
+	function addNewRaw() {
+		event.preventDefault();
+		var table = document.getElementsByTagName("table")[0];
+
+		var newRow = table.insertRow(table.rows.length);
+		newRow.insertCell(0).appendChild(document.createElement("input"));
+		newRow.insertCell(1).appendChild(document.createElement("input"));
+		newRow.insertCell(2).appendChild(document.createElement("input"));
+		newRow.insertCell(3).appendChild(document.createElement("input"));
+	}
+</script>
+
+</body>
+</html>
