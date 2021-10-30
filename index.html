@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+
+<style type="text/css">
+	body{
+		font-family: calibri;
+		background-color: #ffc0cb80;
+	}
+	.table{
+		width: 800px;
+		border-radius: 15px;
+		border: 1px solid grey;
+		background-color: white;
+	}
+	.row{
+		display: flex;
+    	align-items: center;
+    	margin: 5px 10px 5px 10px;
+		border-radius: 3px;
+		border: 1px solid grey;
+
+	}
+	.thead{
+		margin-top: 20px;
+		background-color: red;
+		color: white;
+	}
+	.data{
+		margin: 5px;
+		width: 100%;
+		text-align: center;
+	}
+	.data:not(:last-child){
+		border-right: 1px solid grey;
+	}
+	input:focus{
+		background-color: white;
+	    outline: none;
+	}
+	input{
+		background-color: white;
+		border: none;
+		text-align: center;
+	}
+	.addMore{
+		margin: 5px;
+		border: none;
+		background-color: white;
+	}
+	.tfoot{
+		margin: 10px;
+	}
+</style>
+</head>
+<body>
+<form>
+	<div class="table">
+		<div class="row thead">
+			<div class="hdata data">Book Name</div>
+			<div class="hdata data">Code</div>
+			<div class="hdata data">Writer Name</div>
+			<div class="hdata data">Other</div>
+		</div>
+		<div class="row">
+			<div class="data"><input type="text" name=""></div>
+			<div class="data"><input type="text" name=""></div>
+			<div class="data"><input type="text" name=""></div>
+			<div class="data"><input type="text" name=""></div>
+		</div>
+		<div class="tfoot">
+			<button class="addMore" onclick="addMoreRow()">(+) Add More</button>
+			<br>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+
+	function addMoreRow() {
+		event.preventDefault();
+		var table = document.getElementsByClassName("table")[0];
+		var tfoot = document.getElementsByClassName("tfoot")[0];
+		table.removeChild(tfoot);
+
+		var newRow = document.createElement("div");
+		newRow.classList.add("row");
+		newRow.innerHTML = '<div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div>';
+		table.appendChild(newRow);
+
+		table.appendChild(tfoot);
+	}
+</script>
+
+</body>
+</html>
