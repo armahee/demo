@@ -1,0 +1,123 @@
+body{
+	font-family: calibri;
+	background-color: #ffc0cb80;
+}
+.table{
+	width: 800px;
+	border-radius: 15px;
+	border: 1px solid grey;
+	background-color: white;
+	padding: 10px 5px 10px 5px;
+}
+.shedule{
+	width: 790px;
+	overflow: auto;
+}
+.row{
+	/*display: flex;*/
+	align-items: center;
+	margin: 0px 10px 0px 10px;
+	/*border-radius: 3px;*/
+	/*border: 1px solid grey;*/
+	width: 1470px;
+}
+.thead{
+	margin-top: 20px;
+	background-color: red;
+	color: white;
+}
+.data{
+	padding: 5px;
+	width: 150px;
+	height: 50px;
+	text-align: center;
+	float: left;
+	border: 1px solid grey;
+}
+.hdata{
+	background-color: red;
+}
+.data input{
+	border: none;
+	display: none;
+	margin: auto;
+}
+.input:focus{
+	background-color: white;
+    outline: none;
+}
+.input{
+	background-color: white;
+	border: none;
+	text-align: center;
+	width: 130px;
+	height: 40px;
+	resize: none;
+}
+.addMore{
+	margin: 5px;
+	border: none;
+	background-color: white;
+}
+.tfoot{
+	margin: 10px;
+}
+.btn{
+	width: 100px;
+	background-color: red;
+	color: white;
+	margin: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid red;
+}
+.btnAdd{
+	margin: 5px 10px 20px 560px;
+}
+.btnCncl{
+	margin: 0px;
+	background-color: white;
+	color: red;
+}
+.modal{
+	display: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #fd99abb8;
+}
+.modalMenu{
+	width: 600px;
+	height: 250px;
+	margin: auto;
+	border: 1px solid grey;
+	border-radius: 15px;
+	background-color: white;
+	position: relative;
+}
+.mhead{
+	text-align: center;
+}
+.mfoot{
+	float: right;
+	margin: 20px;
+}
+.mbody{
+	margin: 10px;
+	width: 100%;
+}
+.day{
+	width: 45%;
+	float: left;
+}
+.ckbx{
+	float: left;
+	margin: 5px;
+}
+.lebel{
+	width: 130px;
+	float: left;
+	margin: 5px;
+}
