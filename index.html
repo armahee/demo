@@ -2,115 +2,68 @@
 <html>
 <head>
 	<title>demo</title>
-
-<style type="text/css">
-	body{
-		font-family: calibri;
-		background-color: #ffc0cb80;
-	}
-	.table{
-		width: 800px;
-		border-radius: 15px;
-		border: 1px solid grey;
-		background-color: white;
-	}
-	.row{
-		display: flex;
-    	align-items: center;
-    	margin: 5px 10px 5px 10px;
-		border-radius: 3px;
-		border: 1px solid grey;
-
-	}
-	.thead{
-		margin-top: 20px;
-		background-color: red;
-		color: white;
-	}
-	.data{
-		margin: 5px;
-		width: 100%;
-		text-align: center;
-	}
-	.data:not(:last-child){
-		border-right: 1px solid grey;
-	}
-	input:focus{
-		background-color: white;
-	    outline: none;
-	}
-	input{
-		background-color: white;
-		border: none;
-		text-align: center;
-	}
-	.addMore{
-		margin: 5px;
-		border: none;
-		background-color: white;
-	}
-	.tfoot{
-		margin: 10px;
-	}
-	.btnAdd{
-		width: 100px;
-		background-color: red;
-		color: white;
-		margin: 5px 10px 20px 560px;
-		padding: 5px;
-		border-radius: 5px;
-		border: 1px solid red;
-	}
-	.btnCncl{
-		width: 100px;
-		background-color: white;
-		color: red;
-		border: 1px solid red;
-		padding: 5px;
-		border-radius: 5px;
-	}
-</style>
+	<link rel="stylesheet" type="text/css" href="./test2.css">
 </head>
 <body>
-<form>
-	<div class="table">
-		<div class="row thead">
-			<div class="hdata data">Book Name</div>
-			<div class="hdata data">Code</div>
-			<div class="hdata data">Writer Name</div>
-			<div class="hdata data">Other</div>
+<div class="modal">
+	<div class="modalMenu">
+		<div class="mhead"><h2>Choose Day</h1></div>
+		<div class="mbody">
+			<div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Saturday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Sunday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Monday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Tuesday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Wednesday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Thursday</div><input type="time">
+			</div><div class="day"><div class="ckbx"><input type="checkbox">
+			</div><div class="lebel">Friday</div><input type="time">
+			</div>
 		</div>
-		<div class="row">
-			<div class="data"><input type="text" name=""></div>
-			<div class="data"><input type="text" name=""></div>
-			<div class="data"><input type="text" name=""></div>
-			<div class="data"><input type="text" name=""></div>
-		</div>
-		<div class="tfoot">
-			<button class="addMore" onclick="addMoreRow()">(+) Add More</button>
-			<br>
-			<button class="btnAdd">Add</button>
-			<button class="btnCncl">Cancel</button>
+		<div class="mfoot">
+			<button class="btn btnSave" onclick="save()">save</button>
+			<button class="btn btnCncl" onclick="cancel()">Cancel</button>
 		</div>
 	</div>
-</form>
-
-<script type="text/javascript">
-
-	function addMoreRow() {
-		event.preventDefault();
-		var table = document.getElementsByClassName("table")[0];
-		var tfoot = document.getElementsByClassName("tfoot")[0];
-		table.removeChild(tfoot);
-
-		var newRow = document.createElement("div");
-		newRow.classList.add("row");
-		newRow.innerHTML = '<div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div><div class="data"><input type="text" name=""></div>';
-		table.appendChild(newRow);
-
-		table.appendChild(tfoot);
-	}
-</script>
+</div>
+<div class="table">
+	<div class="shedule">
+		<div class="row thead">
+			<div class="hdata data">Meals</div>
+			<div class="hdata data">Adjust Time</div>
+			<div class="hdata data">Saturday</div>
+			<div class="hdata data">Sunday</div>
+			<div class="hdata data">Monday</div>
+			<div class="hdata data">Tuesday</div>
+			<div class="hdata data">Wednesday</div>
+			<div class="hdata data">Thursday</div>
+			<div class="hdata data">Friday</div>
+		</div>
+		<div class="row"><div class="data">
+			<textarea class="input"></textarea>
+			</div><div class="data"><button class="btn" onclick="adjustTime(3)">Adjust Time</button>
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div><div class="data"><input type="time" readonly><br><input type="checkbox">
+			</div></div>
+	</div>
+	<div class="tfoot">
+		<button class="addMore" onclick="addMoreRow()">(+) Add More</button>
+		<br>
+		<button class="btn btnAdd">Add</button>
+		<button class="btn btnCncl">Cancel</button>
+	</div>
+</div>
+<script type="text/javascript" src="./test2.js"></script>
 
 </body>
 </html>
