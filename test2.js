@@ -34,7 +34,8 @@ function save() {
 		row.childNodes[i+2].childNodes[0].value = '';
 		row.childNodes[i+2].childNodes[2].style.display = "none";
 		row.childNodes[i+2].childNodes[2].checked = false;
-		if(allckbx[i].childNodes[0].childNodes[0].checked){
+		if(allckbx[i].childNodes[0].childNodes[0].checked &&
+		  allckbx[i].childNodes[2].value != ''){
 			// var j=((i+1)*2)+3;
 			row.childNodes[i+2].childNodes[0].value = allckbx[i].childNodes[2].value;
 			row.childNodes[i+2].childNodes[0].style.display = "block";
