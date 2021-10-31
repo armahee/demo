@@ -109,15 +109,18 @@ body{
 	width: 100%;
 }
 .day{
-	width: 45%;
+	width: 48%;
 	float: left;
+}
+.day input{
+	border: 1px solid red;
 }
 .ckbx{
 	float: left;
 	margin: 5px;
 }
 .lebel{
-	width: 130px;
+	width: 100px;
 	float: left;
 	margin: 5px;
 }
