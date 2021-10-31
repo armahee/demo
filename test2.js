@@ -5,7 +5,7 @@ function addMoreRow() {
 
 	var newRow = document.createElement("div");
 	newRow.classList.add("row");
-	newRow.innerHTML = '<div class="data"><textarea class="input"></textarea></div><div class="data"><button class="btn" onclick="adjustTime('+n+')">Adjust Time</button></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div><div class="data"><input type="time" readonly><br><input type="checkbox"></div>';
+	newRow.innerHTML = '<div class="data"><textarea class="input"></textarea></div><div class="data"><button class="btn" onclick="adjustTime('+n+')">Adjust Time</button></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div><div class="data"><input type="time" readonly><br><input type="checkbox" onclick="return false;"></div>';
 	table.appendChild(newRow);
 }
 
