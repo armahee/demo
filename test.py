@@ -22,6 +22,7 @@ while t_i < t_t:
         continue
     link = l[0:len(l)-1]
     driver.get(link)
+    fsoup = BeautifulSoup(driver.page_source, "html.parser")
     src = str(fsoup)
     res = src.find("<!DOCTYPE html>")
     while res == -1:
