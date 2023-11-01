@@ -22,17 +22,17 @@ while t_i < t_t:
         continue
     link = l[0:len(l)-1]
     driver.get(link)
-    fsoup = BeautifulSoup(driver.page_source, "html.parser")
-    src = str(fsoup)
+    
+    src = driver.page_source
     res = src.find("<!DOCTYPE html>")
     while res == -1:
-        fsoup = BeautifulSoup(driver.page_source, "html.parser")
-        src = str(fsoup)
-        res = src.find("sCodeEAN")
+        
+        src = driver.page_source
+        res = src.find("<!DOCTYPE html>")
         if res != -1:
-            fsoup = BeautifulSoup(driver.page_source, "html.parser")
             f1.write(driver.page_source)
             f1.close()
+            fsoup = BeautifulSoup(driver.page_source, "html.parser")
             #https://www.aliexpress.com/item/1005005209142677.html?spm=a2g0o.home.moretolove.1.650c2145xLMHPP&gps-id=pcJustForYou&scm=1007.13562.333647.0&scm_id=1007.13562.333647.0&scm-url=1007.13562.333647.0&pvid=d6ba59ce-ac84-4a03-8762-065f84f540cc&_t=gps-id:pcJustForYou,scm-url:1007.13562.333647.0,pvid:d6ba59ce-ac84-4a03-8762-065f84f540cc,tpp_buckets:668%232846%238110%231995&pdp_npi=4%40dis%21BDT%211744.90%21478.08%21%21%2115.84%21%21%402103200616988700938098778e9fa7%2112000032182654678%21rec%21BD%21%21AB
             soup = fsoup.find_all("a")
             for a in soup:
