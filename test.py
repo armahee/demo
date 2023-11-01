@@ -24,11 +24,11 @@ while t_i < t_t:
     driver.get(link)
     
     src = driver.page_source
-    res = src.find("<!DOCTYPE html>")
+    res = src.find("<body")
     while res == -1:
         
         src = driver.page_source
-        res = src.find("<!DOCTYPE html>")
+        res = src.find("<body")
         if res != -1:
             f1.write(driver.page_source)
             f1.close()
