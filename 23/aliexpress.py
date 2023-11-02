@@ -1,5 +1,16 @@
-import datetime
 import os
+def pre():
+    os.system("pip install selenium==4.12.0")
+    os.system("pip install undetected-chromedriver==3.5.3")
+    os.system("pip install pandas==2.1.2")
+    os.system("pip install chromedriver_autoinstaller==0.6.2")
+
+if  not os.path.isfile("pre"):
+    pre()
+    f = open("pre","w")
+    f.close()
+
+import datetime
 import re
 import random
 import sys
@@ -10,7 +21,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from urllib import parse
 from urllib.parse import urlparse
-from webdriver_manager.chrome import ChromeDriverManager
+import chromedriver_autoinstaller
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -28,12 +39,6 @@ elif __file__:
     application_path = os.path .dirname(__file__)
 
 
-driver_path = ChromeDriverManager().install()
-
-# driver_path = r'C:\Users\Danysys\.wdm\drivers\chromedriver\win64\116.0.5845.111\chromedriver-win32/chromedriver.exe'
-
-print(driver_path)
-
 options = uc.ChromeOptions()
 # options.headless = True
 # options.add_argument("--disable-blink-features=AutomationControlled")
@@ -46,7 +51,9 @@ options.add_argument("--log-level=3")
 options.add_argument("--no-first-run")
 # options.add_argument("--disable-single-click-autofill")
 
-driver = uc.Chrome(Service=ChromeDriverManager().install(),options=options)
+gc_version = chromedriver_autoinstaller.get_chrome_version()
+print("Chrome version:",gc_version)
+driver = uc.Chrome(options=options,version_main=int(gc_version.split(".")[0]))
 
 file_out = ''
 
@@ -219,15 +226,25 @@ def login(usr,pas):
         )
     ).click()
     WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located(
+        EC.element_to_be_clickable(
             (By.XPATH, '//button[contains(@class,"my-account--signin--")]')
         )
     ).click()
     WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located(
+        EC.element_to_be_clickable(
             (By.XPATH, '//input[contains(@id,"fm-login-id")]')
         )
     ).send_keys(usr)
+    WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//input[contains(@id,"fm-login-password")]')
+        )
+    ).send_keys(pas)
+    WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//button[contains(@class,"login-submit")]')
+        )
+    ).click()
     print("done")
     time.sleep(20)
     pass
@@ -240,7 +257,7 @@ def main():
 
     # msgbox('be sure to select Ship To, Language and Currency before continue. :)')
 
-    login("arifrayhan54@gmail.com","testpass")
+    login("test@gmail.com","testpass")
 
     ct = datetime.datetime.now()
 
