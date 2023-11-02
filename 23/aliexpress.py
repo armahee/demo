@@ -213,12 +213,22 @@ def get_product_data(url):
 
 def login(usr,pas):
     print("Attempting login user:",usr)
-    sign_button = WebDriverWait(driver, 20).until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, '//button[contains(@class,"my-account--signin--")]')
-                )
-            )
-    sign_button.click()
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//span[contains(@class,"my-account--centerIcon--")]')
+        )
+    ).click()
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//button[contains(@class,"my-account--signin--")]')
+        )
+    ).click()
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//input[contains(@id,"fm-login-id")]')
+        )
+    ).send_keys(usr)
+    print("done")
     time.sleep(20)
     pass
 
@@ -284,11 +294,12 @@ if __name__ == '__main__':
 
     try:
         main()
-        read_file = pd.read_csv(file_out,encoding='utf-8')
-        read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
-        os.remove(file_out)
+        # read_file = pd.read_csv(file_out,encoding='utf-8')
+        # read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
+        # os.remove(file_out)
     except Exception as e:
-        read_file = pd.read_csv(file_out,encoding='utf-8')
-        read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
-        os.remove(file_out)
+        # read_file = pd.read_csv(file_out,encoding='utf-8')
+        # read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
+        # os.remove(file_out)
+        pass
 
