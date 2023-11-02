@@ -18,7 +18,7 @@ import time
 import csv
 import json
 import pandas as pd
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from urllib import parse
 from urllib.parse import urlparse
 import chromedriver_autoinstaller
@@ -219,6 +219,29 @@ def get_product_data(url):
             write_csv([url,"Unknown","","","","","","","","","","",""])
 
 def login(usr,pas):
+    if len(usr.split("@")) != 2:
+        print("Invalid username")
+        return
+    cr_usr = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//span[contains(@class,"my-account--small--")]')
+        )
+    ).get_attribute('innerText')
+    if len(cr_usr.split(",")) > 1 and cr_usr.split(",")[1].strip() == usr.split("@")[0]:
+        print("Already logged in user:",cr_usr.split(",")[1].strip())
+        return
+    if len(cr_usr.split(",")) > 1:
+        print("Loging out user:",cr_usr.split(",")[1].strip())
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//span[contains(@class,"my-account--centerIcon--")]')
+            )
+        ).click()
+        WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, '//a[contains(@class,"my-account--out--")]')
+            )
+        ).click()
     print("Attempting login user:",usr)
     WebDriverWait(driver, 20).until(
         EC.presence_of_element_located(
@@ -245,9 +268,27 @@ def login(usr,pas):
             (By.XPATH, '//button[contains(@class,"login-submit")]')
         )
     ).click()
+    cr_usr = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//span[contains(@class,"my-account--small--")]')
+        )
+    ).get_attribute('innerText')
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@class,"email-header-title")]')
+            )
+        ).click()
+        msgbox('Just enter the verification code manually within 60 second. Then everything will work automatically')
+        WebDriverWait(driver, 60).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, '//button[contains(@class,"comet-btn")]')
+            )
+        ).click()
+    except:
+        pass
     print("done")
     time.sleep(20)
-    pass
 
 def main():
 
@@ -257,7 +298,7 @@ def main():
 
     # msgbox('be sure to select Ship To, Language and Currency before continue. :)')
 
-    login("test@gmail.com","testpass")
+    login("arifrayhan54@gmail.com","testpass")
 
     ct = datetime.datetime.now()
 
