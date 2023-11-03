@@ -18,7 +18,7 @@ import time
 import csv
 import json
 import pandas as pd
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from urllib import parse
 from urllib.parse import urlparse
 import chromedriver_autoinstaller
@@ -43,7 +43,7 @@ options = uc.ChromeOptions()
 # options.headless = True
 # options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_argument("--start-maximized")
-options.add_argument(f"--user-data-dir={application_path}\seleniumdata")
+options.add_argument(f"--user-data-dir={application_path}/seleniumdata")
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--ignore-certificate-errors")
@@ -122,33 +122,67 @@ def get_product_data(url):
 
 
         try:
-            variant_name_value = WebDriverWait(driver, 2).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, '//div[contains(@class,"sku-item--property")]//span')
-                )
-            ).text.strip()
+            soup = BeautifulSoup(driver.page_source,"html.parser")
+            fsoup = []
+            for div in soup.find_all("div",{"class":True}):
+                if "sku-item--property" in ''.join(div.get("class")):
+                    fsoup.append(div)
+            variant = [0]*len(fsoup)
+            for i in range(len(fsoup)):
+                skus = fsoup[i].find_all("div",{"data-sku-col":True})
+                variant[i] = [0]*(len(skus)+1)
+                variant[i][0] = fsoup[i].find("div").text.split(":")[0].strip()
+                for j in range(1,len(skus)+1):
+                    for k in skus[j-1].find_all("img"):
+                        variant[i][j] = k.get("alt")
+                    if variant[i][j] == 0:
+                        variant[i][j] = skus[j-1].find("span").text
+            
+            if len(variant) < 1:
+                variant_name = ""
+                variant_value = []
+                variant_name2 = ""
+                variant_value2 = []
+                variant_name3 = ""
+                variant_value3 = []
+            elif len(variant) == 1:
+                variant_name = variant[0][0]
+                variant_value = variant[0][1::]
+                variant_name2 = ""
+                variant_value2 = ""
+                variant_name3 = ""
+                variant_value3 = ""
+            elif len(variant) == 2:
+                variant_name = variant[0][0]
+                variant_value = variant[0][1::]
+                variant_name2 = variant[1][0]
+                variant_value2 = variant[1][1::]
+                variant_name3 = ""
+                variant_value3 = ""
+            elif len(variant) > 2:
+                variant_name = variant[0][0]
+                variant_value = variant[0][1::]
+                variant_name2 = variant[1][0]
+                variant_value2 = variant[1][1::]
+                variant_name3 = variant[2][0]
+                variant_value3 = variant[2][1::]
 
-            variant_split = variant_name_value.split(':')
+            # variant_name_value = WebDriverWait(driver, 2).until(
+            #     EC.presence_of_element_located(
+            #         (By.XPATH, '//div[contains(@class,"sku-item--property")]//span')
+            #     )
+            # ).text.strip()
 
-            variant_name = variant_split[0]
-            variant_value = variant_split[1]
+            # variant_split = variant_name_value.split(':')
+
+            # variant_name = variant_split[0]
+            # variant_value = variant_split[1]
 
 
         except Exception as e:
             print('error variant name,value')
             variant_name = ''
-            variant_value = ''
-
-        # try:
-        #     variant_value = WebDriverWait(driver, 2).until(
-        #         EC.presence_of_element_located(
-        #             (By.XPATH, '//div[contains(@class,"sku-item--property")]//span/span')
-        #         )
-        #     ).text.strip()
-        # except Exception as e:
-        #     print('error variant value')
-        #     variant_value = ''
-
+            variant_value = []
             
         data = json.loads(data_match.group(1))
         product_name = get_value(data,"['productInfoComponent']['subject']")
@@ -297,8 +331,13 @@ def main():
     driver.get('https://www.aliexpress.com/')
 
     # msgbox('be sure to select Ship To, Language and Currency before continue. :)')
-
-    login("arifrayhan54@gmail.com","testpass")
+    if  os.path.isfile("id.txt"):
+        f = open("id.txt","r")
+        usr = f.readlines()
+        f.close()
+        pas = usr[1].strip()
+        usr = usr[0].strip()
+        login(usr,pas)
 
     ct = datetime.datetime.now()
 
@@ -316,7 +355,7 @@ def main():
     start_row = 0
 
     for index, row in df.iterrows():
-        url = row[0]
+        url = row.iloc[0]
         print(index,url)
 
         if pd.isnull(url) or pd.isna(url):
@@ -359,5 +398,5 @@ if __name__ == '__main__':
         # read_file = pd.read_csv(file_out,encoding='utf-8')
         # read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
         # os.remove(file_out)
-        pass
+        print(e)
 
