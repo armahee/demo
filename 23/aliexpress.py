@@ -84,7 +84,7 @@ def write_csv(data):
 
     csv_exist = os.path.isfile(file_out)
     with open(file_out, 'a',newline='',encoding='utf-8') as outfile:
-        headers = ['Aliexpress URL','Status','Product Name','Variant Name (Default)','Variant Value (Default)','Price $NZD (Default)','Shipping $NZD (Default)','Shipping Method (Default)',	'Sold Number','Rating','Reviews','Category','Store Name',	'Store Rating']
+        headers = ['Aliexpress URL','Redirected URL','Status','Product Name','Variant Name (Default)','Variant Value (Default)','Variant Name2','Variant Value2','Variant Name3','Variant Value3','Price $NZD (Default)','Shipping $NZD (Default)','Shipping Method (Default)','Shipping2 $NZD','Shipping Method2','Shipping3 $NZD','Shipping Method3',	'Sold Number','Rating','Reviews','Category','Store Name',	'Store Rating']
         writer = csv.writer(outfile,quoting=csv.QUOTE_ALL)
         if not csv_exist:
             writer.writerow(headers)
@@ -141,25 +141,25 @@ def get_product_data(url):
             
             if len(variant) < 1:
                 variant_name = ""
-                variant_value = []
+                variant_value = [""]
                 variant_name2 = ""
-                variant_value2 = []
+                variant_value2 = [""]
                 variant_name3 = ""
-                variant_value3 = []
+                variant_value3 = [""]
             elif len(variant) == 1:
                 variant_name = variant[0][0]
                 variant_value = variant[0][1::]
                 variant_name2 = ""
-                variant_value2 = ""
+                variant_value2 = [""]
                 variant_name3 = ""
-                variant_value3 = ""
+                variant_value3 = [""]
             elif len(variant) == 2:
                 variant_name = variant[0][0]
                 variant_value = variant[0][1::]
                 variant_name2 = variant[1][0]
                 variant_value2 = variant[1][1::]
                 variant_name3 = ""
-                variant_value3 = ""
+                variant_value3 = [""]
             elif len(variant) > 2:
                 variant_name = variant[0][0]
                 variant_value = variant[0][1::]
@@ -190,26 +190,113 @@ def get_product_data(url):
         # variant_name = get_value(data,"['skuComponent']['productSKUPropertyList'][0]['skuPropertyValues'][0]['propertyValueDisplayName']")
         # price = get_value(data,"['priceComponent']['discountPrice']['minActivityAmount']['value']")
         try:      
-            price = get_value(data,"['metaDataComponent']['ogTitle']").split('NZ$')[0]
+            pricet = get_value(data,"['metaDataComponent']['ogTitle']")
+            price = ""
+            f = True
+            for c in pricet:
+                if c.isnumeric():
+                    f=False
+                    price += c
+                elif c == '.' and not f:
+                    price += c
+                elif c != ',' and not f:
+                    break
+            if f:
+                price = ''.join(pricet.split())
         except Exception as e:
             print('error price')
         
-        shipping = get_value(data,"['webGeneralFreightCalculateComponent']['originalLayoutResultList'][0]['bizData']")
-
-        if shipping:
-            shipping_free = get_value(shipping,"['shippingFee']")
-            # print(shipping_free)
-            if shipping_free:
-                if shipping_free.lower() == 'free':
-                    shipping = shipping_free
+        shippings = []
+        try:
+            soup = BeautifulSoup(driver.page_source,"html.parser")
+            fsoup = []
+            shipping_name = ""
+            shipping_value = ""
+            for div in soup.find_all("div",{"class":"dynamic-shipping-line"}):
+                if "shipping" in div.text.lower():
+                    fsoup.append(div)
                 else:
-                    shipping = get_value(shipping,"['displayAmount']")
-            else:
-                shipping = "This product can't be shipped to your address"
-        else:
-            shipping = ''
+                    shipping_value = "".join(div.text.split())
+                break
+            
+            if len(fsoup) > 0:
+                f = True
+                try:
+                    WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, '//div[contains(@class,"shipping--wrap--")]')
+                        )
+                    ).click()
+                except:
+                    f=False
+                try:
+                    WebDriverWait(driver, 5).until(
+                        EC.element_to_be_clickable(
+                            (By.XPATH, '//button[contains(@class,"logistics--moreOptions--")]')
+                        )
+                    ).click()
+                except:
+                    pass
+                if f:
+                    soup = BeautifulSoup(driver.page_source,"html.parser")
+                    fsoup = soup.find_all("div",{"class":"comet-v2-modal"})
+                    # print(str(fsoup))
+                    for fsoup in fsoup:
+                        fsoup = fsoup.find_all("div",{"class":"dynamic-shipping"})
+                        shippings = [0]*len(fsoup)
+                        for i in range(len(fsoup)):
+                            fsoupi = fsoup[i].find_all("div",{"class":"dynamic-shipping-line"})
+                            shippings[i] = [0,""]
+                            shippings[i][0] = ''.join(fsoupi[2].text.split())+" | "+''.join(fsoupi[3].text.split())
+                            f = True
+                            for c in fsoupi[0].text:
+                                if c.isnumeric():
+                                    f=False
+                                    shippings[i][1] += c
+                                elif c == '.' and not f:
+                                    shippings[i][1] += c
+                                elif c != ',' and not f:
+                                    break
+                            if f:
+                                shippings[i][1] = ''.join(fsoupi[0].text.split())
+            
+            if len(shippings) < 1:
+                shipping_name = ""
+                shipping_value = ""
+                shipping_name2 = ""
+                shipping_value2 = ""
+                shipping_name3 = ""
+                shipping_value3 = ""
+            elif len(shippings) == 1:
+                shipping_name = shippings[0][0]
+                shipping_value = shippings[0][1]
+                shipping_name2 = ""
+                shipping_value2 = ""
+                shipping_name3 = ""
+                shipping_value3 = ""
+            elif len(shippings) == 2:
+                shipping_name = shippings[0][0]
+                shipping_value = shippings[0][1]
+                shipping_name2 = shippings[1][0]
+                shipping_value2 = shippings[1][1]
+                shipping_name3 = ""
+                shipping_value3 = ""
+            elif len(shippings) > 2:
+                shipping_name = shippings[0][0]
+                shipping_value = shippings[0][1]
+                shipping_name2 = shippings[1][0]
+                shipping_value2 = shippings[1][1]
+                shipping_name3 = shippings[2][0]
+                shipping_value3 = shippings[2][1]
 
-        shipping_method = get_value(data,"['webGeneralFreightCalculateComponent']['originalLayoutResultList'][0]['bizData']['deliveryProviderName']")
+
+
+        except Exception as e:
+            print('error shipping name,value')
+            print(e)
+            shipping_name = ''
+            shipping_value = ''
+
 
         sold_number = get_value(data,"['tradeComponent']['formatTradeCount']")
 
@@ -234,8 +321,22 @@ def get_product_data(url):
         store_name =  get_value(data,"['sellerComponent']['storeName']")
         store_rating = get_value(data,"['storeFeedbackComponent']['sellerPositiveRate']") 
 
-        print(url,status,product_name,variant_name,variant_value,price,shipping,shipping_method,sold_number,rating,reviews,category,store_name,store_rating)
-        write_csv([url,status,product_name,variant_name,variant_value,price,shipping,shipping_method,sold_number,rating,reviews,category,store_name,store_rating])
+        redir_url = driver.current_url
+
+        ln3 = len(variant_value3)
+        if not ln3:
+            ln3 = 1
+        ln2 = len(variant_value2)
+        if not ln2:
+            ln2 = 1
+        ln = len(variant_value)
+        if not ln:
+            ln = 1
+        for i in variant_value3:
+            for j in variant_value2:
+                for k in variant_value:
+                    print(url,redir_url,status,product_name,variant_name,k,variant_name2,j,variant_name3,i,price,shipping_value,shipping_name,shipping_value2,shipping_name2,shipping_value3,shipping_name3,sold_number,rating,reviews,category,store_name,store_rating)
+                    write_csv([url,redir_url,status,product_name,variant_name,k,variant_name2,j,variant_name3,i,price,shipping_value,shipping_name,shipping_value2,shipping_name2,shipping_value3,shipping_name3,sold_number,rating,reviews,category,store_name,store_rating])
     else:
 
         try:
@@ -246,12 +347,12 @@ def get_product_data(url):
             ).text.strip()
 
             # print(url,status,"","","","","","","","","","","","")
-            write_csv([url,status,"","","","","","","","","","",""])
+            write_csv([url,status,"","","","","","","","","","","","","","","","","","","",""])
 
         except Exception as e:
             print('error status')
             status = ''
-            write_csv([url,"Unknown","","","","","","","","","","",""])
+            write_csv([url,"Unknown","","","","","","","","","","","","","","","","","","","",""])
 
 def login(usr,pas):
     if len(usr.split("@")) != 2:
@@ -370,7 +471,7 @@ def main():
             get_product_data(url)
         except Exception as e:
             print('Error:',str(e))
-            write_csv([url,f'Error: {str(e)}',"","","","","","","","","","","",""])
+            write_csv([url,f'Error: {str(e)}',"","","","","","","","","","","","","","","","","","","","",""])
 
 
         # input()
@@ -387,12 +488,12 @@ if __name__ == '__main__':
 
     try:
         main()
-        # read_file = pd.read_csv(file_out,encoding='utf-8')
-        # read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
-        # os.remove(file_out)
+        read_file = pd.read_csv(file_out,encoding='utf-8')
+        read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
+        os.remove(file_out)
     except Exception as e:
-        # read_file = pd.read_csv(file_out,encoding='utf-8')
-        # read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
-        # os.remove(file_out)
+        read_file = pd.read_csv(file_out,encoding='utf-8')
+        read_file.to_excel(file_out.replace('.csv','')+'.xlsx', index=None, header=True)
+        os.remove(file_out)
         print(e)
 
