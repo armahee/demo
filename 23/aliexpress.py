@@ -4,7 +4,8 @@ def pre():
     os.system("pip install undetected-chromedriver==3.5.3")
     os.system("pip install pandas==2.1.2")
     os.system("pip install chromedriver_autoinstaller==0.6.2")
-
+    os.system("pip install beautifulsoup4==4.12.2")
+    os.system("pip install openpyxl==3.1.2")
 if  not os.path.isfile("pre"):
     pre()
     f = open("pre","w")
@@ -278,13 +279,8 @@ def login(usr,pas):
         ).click()
     print("Attempting login user:",usr)
     WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located(
-            (By.XPATH, '//span[contains(@class,"my-account--centerIcon--")]')
-        )
-    ).click()
-    WebDriverWait(driver, 20).until(
         EC.element_to_be_clickable(
-            (By.XPATH, '//button[contains(@class,"my-account--signin--")]')
+            (By.XPATH, '//div[contains(@class,"lgh-contain-login-btn")]')
         )
     ).click()
     WebDriverWait(driver, 20).until(
