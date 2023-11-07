@@ -11,8 +11,20 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-gauth = GoogleAuth() 
-gauth.LocalWebserverAuth()        
+gauth = GoogleAuth()
+# Try to load saved client credentials
+gauth.LoadCredentialsFile("mycreds.txt")
+if gauth.credentials is None:
+    # Authenticate if they're not there
+    gauth.LocalWebserverAuth()
+elif gauth.access_token_expired:
+    # Refresh them if expired
+    gauth.Refresh()
+else:
+    # Initialize the saved creds
+    gauth.Authorize()
+# Save the current credentials to a file
+gauth.SaveCredentialsFile("mycreds.txt")
 gdrive = GoogleDrive(gauth) 
 
 if getattr(sys, 'frozen', False):
@@ -71,18 +83,20 @@ while t_i < 10:
             inh = a.get_text().split(',')
             for b in inh:
                 if b[0:5] == '"sku"':
-                    sku = b.split(':')[1]
+                    b = b.split(':')
+                    if len(b) > 1:
+                        sku = b[1]
                     break
         descs = soup.find_all("h1",{"class":"pdp-product-name"})
         des = ""
         for a in descs:
-            inh = ''.join(a.get_text().split())
+            inh = ' '.join(a.get_text().split())
             inh = "'".join(inh.split('"'))
             des = '"'+inh+'"'
         ddescs = soup.find_all("div",{"class":"pdp-description-content"})
         ddes = ""
         for a in ddescs:
-            inh = ''.join(str(a).split())
+            inh = ' '.join(str(a).split())
             inh = "'".join(inh.split('"'))
             ddes = '"'+inh+'"'
             break
@@ -106,7 +120,9 @@ while t_i < 10:
             inh = a.get_text().split(',')
             for b in inh:
                 if b[0:10] == '"IN_STOCK"':
-                    stock = b.split(':')[1]
+                    b = b.split(':')
+                    if len(b) > 1:
+                        stock = b[1]
                     break
         imgs = soup.find_all("script",{"type":"application/ld+json"})
         img = ""
@@ -114,10 +130,12 @@ while t_i < 10:
             inh = a.get_text().split(',')
             for b in inh:
                 if b[0:7] == '"image"':
-                    b = b.split(':')[1]
-                    img = b.split('"')[1]
-                    img = "'".join(img.split('"'))
-                    img = '"'+img+'"'
+                    b = b.split(':')
+                    if len(b) > 2:
+                        b = b[2]
+                        img = b.split('"')[0]
+                        img = "'".join(img.split('"'))
+                        img = '"https:'+img+'"'
                     break
         cnt = ""
         if len(sku) > 0:
