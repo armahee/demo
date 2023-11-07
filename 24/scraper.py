@@ -53,7 +53,7 @@ f = open(f_name, "r")
 t_str = f.readlines()
 f.close()
 t_t = len(t_str)
-t_i = 22
+t_i = 38
 df_name = "data-"+str(t_i+1)+".csv"
 if  not os.path.isfile(application_path+"/data/data-"+str(t_i+1)+".csv"):
     f = open(application_path+"/data/data-"+str(t_i+1)+".csv","w")
