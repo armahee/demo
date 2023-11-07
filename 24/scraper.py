@@ -53,7 +53,7 @@ f = open(f_name, "r")
 t_str = f.readlines()
 f.close()
 t_t = len(t_str)
-t_i = 0
+t_i = 22
 df_name = "data-"+str(t_i+1)+".csv"
 if  not os.path.isfile(application_path+"/data/data-"+str(t_i+1)+".csv"):
     f = open(application_path+"/data/data-"+str(t_i+1)+".csv","w")
@@ -61,7 +61,7 @@ if  not os.path.isfile(application_path+"/data/data-"+str(t_i+1)+".csv"):
     f.close()
 f_name = application_path+"/data/data-"+str(t_i+1)+".csv"
 f = open(f_name, "a")
-while t_i < 500:
+while t_i < 100:
     if driver.current_url[0:22] == "https://www.google.com":
         break
     l = t_str[t_i]
@@ -70,7 +70,7 @@ while t_i < 500:
     if len(l) < 27:
         continue
     link = l[0:len(l)-1]
-    # time.sleep(30)
+    time.sleep(10)
     driver.get(link)
     # time.sleep(60)
     # exit()
