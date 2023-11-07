@@ -11,21 +11,21 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-gauth = GoogleAuth()
-# Try to load saved client credentials
-gauth.LoadCredentialsFile("mycreds.txt")
-if gauth.credentials is None:
-    # Authenticate if they're not there
-    gauth.LocalWebserverAuth()
-elif gauth.access_token_expired:
-    # Refresh them if expired
-    gauth.Refresh()
-else:
-    # Initialize the saved creds
-    gauth.Authorize()
-# Save the current credentials to a file
-gauth.SaveCredentialsFile("mycreds.txt")
-gdrive = GoogleDrive(gauth) 
+# gauth = GoogleAuth()
+# # Try to load saved client credentials
+# gauth.LoadCredentialsFile("mycreds.txt")
+# if gauth.credentials is None:
+#     # Authenticate if they're not there
+#     gauth.LocalWebserverAuth()
+# elif gauth.access_token_expired:
+#     # Refresh them if expired
+#     gauth.Refresh()
+# else:
+#     # Initialize the saved creds
+#     gauth.Authorize()
+# # Save the current credentials to a file
+# gauth.SaveCredentialsFile("mycreds.txt")
+# gdrive = GoogleDrive(gauth) 
 
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -56,12 +56,12 @@ t_t = len(t_str)
 t_i = 0
 df_name = "data-"+str(t_i+1)+".csv"
 if  not os.path.isfile(application_path+"/data/data-"+str(t_i+1)+".csv"):
-    f = open(application_path+"/data/data.csv","w")
+    f = open(application_path+"/data/data-"+str(t_i+1)+".csv","w")
     f.write("SL,EAN CODE,DESCRIPTION,DETAIL DESCRIPTION,PVP,PVP /UNIT,STOCK,picture with the EAN title\n")
     f.close()
 f_name = application_path+"/data/data-"+str(t_i+1)+".csv"
 f = open(f_name, "a")
-while t_i < 10:
+while t_i < 500:
     if driver.current_url[0:22] == "https://www.google.com":
         break
     l = t_str[t_i]
@@ -178,9 +178,9 @@ while t_i < 10:
 
 f.close()
 
-path = application_path+"/data"
-x = df_name
-df = gdrive.CreateFile({'title': x}) 
-df.SetContentFile(os.path.join(path, x)) 
-df.Upload() 
-df = None
+# path = application_path+"/data"
+# x = df_name
+# df = gdrive.CreateFile({'title': x}) 
+# df.SetContentFile(os.path.join(path, x)) 
+# df.Upload() 
+# df = None
