@@ -3,7 +3,7 @@ public class q2 {
         Node current=head,ch=null,ph=null,c=null,p=null;
         while (current!=null) {
             Node prev=current.next;
-            if(current.status.equals("completed")){
+            if(current.status=="completed"){
                 if(ch==null){
                     ch=current;
                     c=current;
